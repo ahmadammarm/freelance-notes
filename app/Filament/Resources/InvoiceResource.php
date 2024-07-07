@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ProjectResource\Pages;
-use App\Filament\Resources\ProjectResource\RelationManagers;
-use App\Models\Project;
+use App\Filament\Resources\InvoiceResource\Pages;
+use App\Filament\Resources\InvoiceResource\RelationManagers;
+use App\Models\Invoice;
 use Filament\Forms;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
@@ -15,13 +15,13 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class ProjectResource extends Resource
+class InvoiceResource extends Resource
 {
-    protected static ?string $model = Project::class;
+    protected static ?string $model = Invoice::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 3;
 
 
 
@@ -33,36 +33,34 @@ class ProjectResource extends Resource
                 ->schema([
                     Section::make('Informasi Umum')
                     ->schema([
-                        Forms\Components\TextInput::make('client_id')
-                        ->required()
-                        ->numeric(),
-                        Forms\Components\TextInput::make('name')
+                        Forms\Components\TextInput::make('project_id')
+                            ->required()
+                            ->numeric(),
+                        Forms\Components\TextInput::make('title')
                             ->required()
                             ->maxLength(255),
-                        Forms\Components\Textarea::make('description')
+                        Forms\Components\Textarea::make('detail')
                             ->maxLength(65535)
                             ->columnSpanFull(),
-                    ]),
-                    Section::make('Harga Project')
-                    ->schema([
-                        Forms\Components\TextInput::make('price')
+                        Forms\Components\Textarea::make('notes')
+                            ->maxLength(65535)
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('total_price')
                             ->required()
-                            ->numeric()
-                            ->prefix('Rp.'),
+                            ->numeric(),
                     ]),
                 ]),
                 Group::make()
                 ->schema([
                     Section::make('Tanggal Penting')
                     ->schema([
-                        Forms\Components\DatePicker::make('start_date')
+                        Forms\Components\DatePicker::make('due_date')
                             ->required(),
-                        Forms\Components\DatePicker::make('end_date')
+                        Forms\Components\DatePicker::make('issue_date')
                             ->required(),
+                        Forms\Components\DatePicker::make('paid_date'),
                     ])
                 ])
-                
-                
             ]);
     }
 
@@ -70,18 +68,21 @@ class ProjectResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('client_id')
+                Tables\Columns\TextColumn::make('project_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('name')
+                Tables\Columns\TextColumn::make('title')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('price')
-                    ->money()
+                Tables\Columns\TextColumn::make('total_price')
+                    ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('start_date')
+                Tables\Columns\TextColumn::make('due_date')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('end_date')
+                Tables\Columns\TextColumn::make('issue_date')
+                    ->date()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('paid_date')
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -116,9 +117,9 @@ class ProjectResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProjects::route('/'),
-            'create' => Pages\CreateProject::route('/create'),
-            'edit' => Pages\EditProject::route('/{record}/edit'),
+            'index' => Pages\ListInvoices::route('/'),
+            'create' => Pages\CreateInvoice::route('/create'),
+            'edit' => Pages\EditInvoice::route('/{record}/edit'),
         ];
     }
 }

@@ -4,18 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Invoice extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'client_id',
-        'invoice_number',
-        'invoice_date',
+        'project_id',
+        'title',
+        'detail',
+        'notes',
+        'total_price',
         'due_date',
-        'sub_total',
-        'discount',
-        'total',
+        'issue_date',
+        'paid_date',        
     ];
+
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class);
+    }
 }

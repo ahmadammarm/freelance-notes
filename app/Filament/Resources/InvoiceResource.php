@@ -11,6 +11,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -33,9 +34,9 @@ class InvoiceResource extends Resource
                 ->schema([
                     Section::make('Informasi Umum')
                     ->schema([
-                        Forms\Components\TextInput::make('project_id')
-                            ->required()
-                            ->numeric(),
+                        Forms\Components\Select::make('project_id')
+                            ->relationship('project', 'name')
+                            ->required(),
                         Forms\Components\TextInput::make('title')
                             ->required()
                             ->maxLength(255),
@@ -68,13 +69,13 @@ class InvoiceResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('project_id')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('project.client.name')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('title')
+                    ->description(fn (Invoice $invoice) => $invoice->project->name)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('total_price')
-                    ->numeric()
+                    ->money('IDR')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('due_date')
                     ->date()
@@ -82,9 +83,9 @@ class InvoiceResource extends Resource
                 Tables\Columns\TextColumn::make('issue_date')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('paid_date')
-                    ->date()
-                    ->sortable(),
+                IconColumn::make('paid_date')
+                    ->boolean()
+                    ->label('Paid'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

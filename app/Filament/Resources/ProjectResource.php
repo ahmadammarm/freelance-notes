@@ -33,12 +33,12 @@ class ProjectResource extends Resource
                 ->schema([
                     Section::make('Informasi Umum')
                     ->schema([
-                        Forms\Components\TextInput::make('client_id')
-                        ->required()
-                        ->numeric(),
                         Forms\Components\TextInput::make('name')
                             ->required()
                             ->maxLength(255),
+                        Forms\Components\Select::make('client_id')
+                            ->relationship('client', 'name')
+                            ->required(),
                         Forms\Components\Textarea::make('description')
                             ->maxLength(65535)
                             ->columnSpanFull(),
@@ -48,7 +48,7 @@ class ProjectResource extends Resource
                         Forms\Components\TextInput::make('price')
                             ->required()
                             ->numeric()
-                            ->prefix('Rp.'),
+                            ->prefix('IDR'),
                     ]),
                 ]),
                 Group::make()
@@ -70,13 +70,13 @@ class ProjectResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('client_id')
+                Tables\Columns\TextColumn::make('client.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('price')
-                    ->money()
+                    ->money('IDR')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('start_date')
                     ->date()

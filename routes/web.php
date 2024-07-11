@@ -16,3 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/preview-invoice/{id}', [App\Http\Controllers\InvoiceController::class, 'preview'])->name('preview-invoice');
+Route::get('/download-invoice/{id}', [App\Http\Controllers\InvoiceController::class, 'download'])->name('download-invoice');

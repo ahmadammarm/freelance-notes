@@ -25,4 +25,9 @@ class Invoice extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function getTotalPriceIdrAttribute()
+    {
+        return 'IDR ' . number_format($this->total_price, 0, ',', '.');
+    }
 }

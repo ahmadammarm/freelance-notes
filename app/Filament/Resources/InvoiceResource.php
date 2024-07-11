@@ -11,6 +11,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -100,6 +101,15 @@ class InvoiceResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Action::make('View Invoice')
+                    ->url(fn (Invoice $record): string => route('preview-invoice', $record))
+                    ->color('success')
+                    ->openUrlInNewTab(),
+
+                Action::make('Download Invoice')
+                    ->url(fn (Invoice $record): string => route('download-invoice', $record))
+                    ->color('danger')
+                    ->openUrlInNewTab()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

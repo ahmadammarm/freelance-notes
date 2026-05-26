@@ -76,7 +76,7 @@ class InvoiceResource extends Resource
                     ->description(fn (Invoice $invoice) => $invoice->project->name)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('total_price')
-                    ->money('IDR')
+                    ->formatStateUsing(fn ($state) => 'IDR ' . number_format($state, 0, ',', '.'))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('due_date')
                     ->date()
